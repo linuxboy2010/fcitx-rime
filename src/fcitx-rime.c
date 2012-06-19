@@ -39,13 +39,13 @@ static void* FcitxRimeCreate(FcitxInstance* instance)
     FcitxXDGGetFileUserWithPrefix("rime", "", NULL, &user_path);
     char* shared_data_dir = fcitx_utils_get_fcitx_path_with_filename("pkgdatadir", "rime");
 
-    RimeTraits ibus_rime_traits;
-    ibus_rime_traits.shared_data_dir = shared_data_dir;
-    ibus_rime_traits.user_data_dir = user_path;
-    ibus_rime_traits.distribution_name = "Rime";
-    ibus_rime_traits.distribution_code_name = "fcitx-rime";
-    ibus_rime_traits.distribution_version = "0.1";
-    RimeInitialize(&ibus_rime_traits);
+    RimeTraits fcitx_rime_traits;
+    fcitx_rime_traits.shared_data_dir = shared_data_dir;
+    fcitx_rime_traits.user_data_dir = user_path;
+    fcitx_rime_traits.distribution_name = "Rime";
+    fcitx_rime_traits.distribution_code_name = "fcitx-rime";
+    fcitx_rime_traits.distribution_version = "0.1";
+    RimeInitialize(&fcitx_rime_traits);
     if (RimeStartMaintenanceOnWorkspaceChange()) {
         // TODO: notification...
     }
@@ -131,7 +131,9 @@ INPUT_RETURN_VALUE FcitxRimeDoInput(void* arg, FcitxKeySym sym, unsigned int sta
 
 INPUT_RETURN_VALUE FcitxRimeGetCandWord(void* arg, FcitxCandidateWord* candWord)
 {
-    RimeContext context = {0};
+    RimeContext context;
+    context.data_size = 0;
+    context.commit_text_preview = "";
     FcitxRime *rime = (FcitxRime *)arg;
     RIME_STRUCT_INIT(RimeContext, context);
     INPUT_RETURN_VALUE retVal = IRV_TO_PROCESS;
@@ -175,7 +177,9 @@ INPUT_RETURN_VALUE FcitxRimeGetCandWords(void* arg)
     FcitxInputState *input = FcitxInstanceGetInputState(rime->owner);
     FcitxInstanceCleanInputWindow(rime->owner);
 
-    RimeContext context = {0};
+    RimeContext context;
+    context.data_size = 0;
+    context.commit_text_preview = "";
     RIME_STRUCT_INIT(RimeContext, context);
     if (!RimeGetContext(rime->session_id, &context) ||
         context.composition.length == 0) {

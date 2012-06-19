@@ -1,5 +1,6 @@
 file(GLOB PRESET_YAML "${PROJECT_SOURCE_DIR}/../brise/preset/*.yaml")
 file(GLOB SUPPLEMENT_YAML "${PROJECT_SOURCE_DIR}/../brise/supplement/*.yaml")
+file(GLOB EXTRA_YAML "${PROJECT_SOURCE_DIR}/../brise/extra/*.yaml")
 
 set(GEN_RIME_DATADIR "${CMAKE_CURRENT_BINARY_DIR}/_data/rime")
 
@@ -11,7 +12,8 @@ add_custom_target(
     COMMAND ${CMAKE_COMMAND} -E copy "${PROJECT_SOURCE_DIR}/../brise/essay.kct" ${GEN_RIME_DATADIR}
     COMMAND cp ${PRESET_YAML} ${GEN_RIME_DATADIR}
     COMMAND cp ${SUPPLEMENT_YAML} ${GEN_RIME_DATADIR}
-    COMMAND cd ${GEN_RIME_DATADIR} && "${CMAKE_CURRENT_BINARY_DIR}/../src/build_yaml"
+    COMMAND cp ${EXTRA_YAML} ${GEN_RIME_DATADIR}
+    COMMAND cd ${GEN_RIME_DATADIR} && "${CMAKE_CURRENT_BINARY_DIR}/../src/rime_deployer"
     COMMAND ${CMAKE_COMMAND} -E remove -f "${GEN_RIME_DATADIR}/rime.log" "${GEN_RIME_DATADIR}/installation.yaml"
 )
 
